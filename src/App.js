@@ -3,7 +3,7 @@ import 'reset-css/reset.css';
 import './App.css';
 import SearchBar from './components/SearchBar';
 import queryString from 'query-string';
-
+import Search from './pages/Search';
 
 class App extends Component {
 
@@ -19,7 +19,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    let parsed = queryString.parse(window.location.search);
+    let parsed = queryString.parse(window.location.hash);
     let accessToken = parsed.access_token;
     if (!accessToken)
       return;
@@ -39,8 +39,8 @@ class App extends Component {
         {this.state.user ?
           <div>
             <h1>
-              {/* search input */}
-              <SearchBar onUserInput={this.onUserInput} />
+          <Search />  
+              {/* <SearchBar onUserInput={this.onUserInput} /> */}
 
               Welcome {this.state.user.name}
             </h1>
