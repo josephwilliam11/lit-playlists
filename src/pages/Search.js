@@ -1,7 +1,8 @@
-
 import React, { Component } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 import SearchBar from '../components/SearchBar';
+import Results from '../components/Results';
+import ScrollArea from 'react-scrollbar';
 const spotifyApi = new SpotifyWebApi();
 
 class Search extends Component {
@@ -17,17 +18,9 @@ class Search extends Component {
       loggedIn: token,
       nowPlaying: { name: 'Not Checked', albumArt: '' },
       searchTerm: "",
-      idArray: []
+      array: []
     }
   }
-
-
-  // handleInputChange(searchTerm) {
-  //     this.setState({ searchTerm: searchTerm });
-  //     this.props.onUserInput(this.state.searchTerm)
-  // }
-
-  
 
   getHashParams() {
     var hashParams = {};
@@ -76,10 +69,8 @@ class Search extends Component {
 
   getsearch = (searchTerm) => {
     //search by artist 50 tracks
-    console.log("In search");
+    // console.log("In search");
     var prev = null;
-    let items = [];
-    let ids = [];
     // abort previous request, if any
     if (prev !== null) {
       prev.abort();
@@ -87,36 +78,45 @@ class Search extends Component {
 
     // store the current promise in case we need to abort it
     prev = spotifyApi.searchTracks(searchTerm, { limit: 50 });
-    // console.log(prev);
-    prev.then(function (data) {
-      // clean the promise so it doesn't call abort
-      prev = null;
+    console.log(spotifyApi);
 
-      items = data.tracks.items;
+    prev.then((data) => {
 
-      items.forEach(function (item) {
-        ids.push(item.id)
-      })
-      console.log("ID ARRAY", ids);
-      let analysis = "";
-      ids.forEach(function (item) {
-        //analysis getting dancebility value
-        analysis = spotifyApi.getAudioFeaturesForTrack(item)
-        analysis.then(function (res) {
-          console.log(res);
+        // clean the promise so it doesn't call abort
+        prev = null;
+  
+        const items = data.tracks.items;
+        console.log(items);
+        items.forEach(function (item) {
+    
+          let ms = item.duration_ms;
+          let min = Math.floor((ms/1000/60) << 0);
+          let sec = Math.floor((ms/1000) % 60);
+          
+          // times.push(min + ':' + sec);
         })
-      })
-
-
-    }, function (err) {
-      console.error(err);
-    });
+        
+        // console.log("ID ARRAY", ids);
+        this.setState({array: items}) 
+      
+        console.log("names", this.state.array[1].name)
+        // let analysis = "";
+        // this.state.array.id.forEach(function (item) {
+        //   //analysis getting dancebility value
+        //   analysis = spotifyApi.getAudioFeaturesForTrack(item)
+        //   analysis.then(function (res) {
+        //     // console.log(res);
+        //   })
+        // })
+      },
+       function (err) {
+        console.error(err);
+      });
   }
 
 
-
   render() {
-    console.log("what is it", this.getHashParams(), this.state)
+    // console.log("what is it", this.getHashParams(), this.state)
     return (
       <div className="App">
         <div>
@@ -132,13 +132,14 @@ class Search extends Component {
           </button>
             <SearchBar
               getsearch={this.getsearch}
-              />
+            />
 
           </div>
         }
+       <Results array={this.state.array} />
 
       </div>
-    );
+    ); 
   }
 }
 

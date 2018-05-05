@@ -10,7 +10,7 @@ class SearchBar extends Component {
     handleInputChange = (sTerm) => {
         let str = this.state.searchString;
         str = str+ sTerm;
-        console.log("The search Term:",sTerm);
+        // console.log("The search Term:",sTerm);
         this.setState({ searchString: sTerm });
         // this.props.search(this.state.searchTerm)
     }
