@@ -44,7 +44,9 @@ class Search extends Component {
   getNowPlaying() {
     console.log("get now playing");
     spotifyApi.getMyCurrentPlaybackState()
+    
       .then((response) => {
+        console.log(spotifyApi)
         this.setState({
           nowPlaying: {
             name: response.item.name,
@@ -53,6 +55,24 @@ class Search extends Component {
         });
       })
   }
+
+  playTrack = () => {
+    let token = 
+  console.log(spotifyApi);
+  console.log(token)
+    spotifyApi.getMyDevices()
+    spotifyApi.getMe()
+    spotifyApi.getUserPlaylists()
+    spotifyApi.pause()
+    // spotifyApi.play('1223418399')
+    
+    
+      .then((response) => {
+        console.log(response);
+
+      })
+  }
+
 
   getsearch = (searchTerm) => {
     //search by artist 50 tracks
@@ -107,7 +127,7 @@ class Search extends Component {
         </div>
         {this.state.loggedIn &&
           <div>
-            <button onClick={() => this.getNowPlaying()}>
+            <button onClick={() => this.playTrack()}>
               Check Now Playing
           </button>
             <SearchBar
