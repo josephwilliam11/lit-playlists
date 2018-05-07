@@ -4,6 +4,7 @@ import './App.css';
 import SearchBar from './components/SearchBar';
 import queryString from 'query-string';
 import Search from './pages/Search';
+import Text from './components/Text';
 
 class App extends Component {
 
@@ -38,21 +39,25 @@ class App extends Component {
       <div className="App">
         {this.state.user ?
           <div>
-            <h1>
-          <Search />  
-              {/* <SearchBar onUserInput={this.onUserInput} /> */}
+            <Search />
+          </div> :
+          <div>
+            <Text />
+            <center>
+              <button className="loginButton loginButton1" onClick={() => {
+                fetch('/login')
+                  .then(res => res.json())
+                  .then(({ url }) => window.location = url)
+              }
+              }
+              >Sign in with Spotify <i className="fab fa-spotify"></i>
 
-              Welcome {this.state.user.name}
-            </h1>
-          </div> : <button onClick={() => {
-            fetch('/login')
-              .then(res => res.json())
-                .then(({url}) => window.location = url)
-          }
-          }
-          >Sign in with Spotify</button>
-          // button component or landing button
+              </button>
+            </center>
+          </div>
+
         }
+
       </div>
     )
   }
