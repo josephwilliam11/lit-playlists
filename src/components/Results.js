@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { ListGroup, ListGroupItem} from 'reactstrap';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 import ScrollArea from 'react-scrollbar';
 
+
 const Results = props => (
+  <div>
     <ul className="list-group search-results">
       {props.array.map(track => (
         <li key={track.id} className="list-group-item">
@@ -11,9 +13,8 @@ const Results = props => (
         </li>
       ))}
     </ul>
-  );
+  </div>
+);
 
-// fix time
- 
-  export default Results;
-  
+
+export default Results;

@@ -35,13 +35,12 @@ class App extends Component {
   render() {
 
     return (
+      
       <div className="App">
         {this.state.user ?
           <div>
             <h1>
           <Search />  
-              {/* <SearchBar onUserInput={this.onUserInput} /> */}
-
               Welcome {this.state.user.name}
             </h1>
           </div> : <button onClick={() => {
