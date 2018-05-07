@@ -26,7 +26,8 @@ class Search extends Component {
       array: [],
       analysis: [],
       value: 0,
-      username: ''
+      username: '',
+      sorted: []
     }
   }
 
@@ -83,12 +84,6 @@ class Search extends Component {
       prev = null;
 
       const items = data.tracks.items;
-      items.forEach(function (item) {
-
-        let ms = item.duration_ms;
-        let min = Math.floor((ms / 1000 / 60) << 0);
-        let sec = Math.floor((ms / 1000) % 60);
-      })
       this.setState({ array: items })
     },
       function (err) {
@@ -96,7 +91,7 @@ class Search extends Component {
       });
   }
 
-  sliderChange = () => {
+  sliderChange = (val) => {
     console.log("cans")
     this.state.array.forEach((item) => {
       //analysis getting dancebility value           
@@ -109,47 +104,52 @@ class Search extends Component {
           // dance: [...dance, res.danceability]
           analysis: [...analysis, res]
         })
-        const val = this.state.value;
+        // const val = this.state.value;
         const trackAnalysis = this.state.analysis;
         let sorted = '';
+        console.log(val)
         switch (val) {
-          case '1.0':
+          case 1.0:
              sorted = _.sortBy(trackAnalysis, ['danceability', 'DESC'])
             console.log('1.0' , sorted)
             break;
-          case '0.25':
+          case 0.25:
              sorted = _.sortBy(trackAnalysis, ['danceability', 'ASC'])
             console.log('0.25' , sorted)
             break;
-          case '0.50':
+          case 0.50:
               sorted = _.filter(trackAnalysis, function(track) {
               return track.danceability <= val           
             })
             sorted = _.sortBy(sorted, ['danceability', 'ASC'])
             console.log('0.50' , sorted)
             break;
-          case '0.75':
+          case 0.75:
             sorted = _.filter(trackAnalysis, function(track) {
             return track.danceability <= val 
 
           })
-          sorted = _.sortBy(sorted, ['danceability', 'ASC'])
+          sorted = _.sortBy(sorted, ['danceability', 'DESC'])
           console.log('0.75' , sorted)
           break;
         }
-
-        // const val = this.state.value;
-        // const trackAnalysis = this.state.analysis;
-        // const sort = _.filter(trackAnalysis, function(track){
-        //    return track.danceability > val
+        this.setState({sorted})
+        console.log(this.state.sorted);
+        this.showPlaylist();
       })
-
-
-
-    
 
     })
   
+}
+
+showPlaylist() {
+  this.state.sorted.forEach((item) => {
+    // console.log(item.id)
+    spotifyApi.getTrack(item.id)
+     .then((res) => {
+      console.log(res)
+     })
+  })  
 }
 
 componentDidMount() {
@@ -192,7 +192,7 @@ render() {
       }
       <Row>
         <Col md="8">
-          <CustomizeSlider sliderChange={this.state.sliderChange}/>
+          <CustomizeSlider sliderChange={this.sliderChange}/>
         </Col>
       </Row>
       <Row>

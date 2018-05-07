@@ -26,7 +26,7 @@ class CustomizeSlider extends React.Component {
        
     }
     onAfterChange = (value) => {
-        console.log(value);
+        console.log('OnAfterChange', value);
         this.props.sliderChange(value);
     }
   
@@ -36,7 +36,7 @@ class CustomizeSlider extends React.Component {
                     defaultValue={1} 
                     value={this.state.value}
                     onChange={this.onSliderChange}
-                    onAfterChange={(event) => this.onAfterChange(event.target.value)}
+                    onAfterChange={this.onAfterChange}
                     min={this.state.min} 
                     max={this.state.max}
             />         

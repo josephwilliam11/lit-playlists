@@ -15,7 +15,7 @@
     "react-scrollbar": "^0.5.4",
     "reactstrap": "^5.0.0",
     "reset-css": "^2.2.1",
-    "spotify-web-api-js":"0.24.0"
+    "spotify-web-api-js": "0.24.0"
   },
   "scripts": {
     "start": "react-scripts start",
