@@ -5,6 +5,8 @@ import SearchBar from '../components/SearchBar';
 import Results from '../components/Results';
 import ScrollArea from 'react-scrollbar';
 import CustomizeSlider from '../components/Slider';
+import { Container, Row, Col } from 'reactstrap';
+import './Style.css';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -23,7 +25,8 @@ class Search extends Component {
       searchTerm: "",
       array: [],
       analysis: [],
-      value: 0
+      value: 0,
+      username: ''
     }
   }
 
@@ -149,31 +152,55 @@ class Search extends Component {
   
 }
 
+componentDidMount() {
+
+  spotifyApi.getMe()
+  .then((response) => {
+    console.log(response.display_name);
+    this.setState({
+      username: response.display_name
+    })
+  })
+}
+  
+
 
 render() {
   // console.log("what is it", this.getHashParams(), this.state)
   return (
     <div className="App">
-      <div>
-        Now Playing: {this.state.nowPlaying.name}
-      </div>
-      <div>
-        <img src={this.state.nowPlaying.albumArt} style={{ height: 150 }} />
-      </div>
+    <Container>
+      <Row>     
+        Welcome: {this.state.username}
+      </Row>
+      <Row>
+        <p>To Create A Lit Playlist First Seach by Artist</p>
+      </Row>
       {this.state.loggedIn &&
+      <Row>
+        <Col md="6">
         <div>
           <button onClick={() => this.playTrack()}>
-            Check Now Playing
+            Test
           </button>
           <SearchBar
             getsearch={this.getsearch}
           />
-
         </div>
+        </Col>
+        </Row>
       }
-      <CustomizeSlider sliderChange={this.state.sliderChange}/>
+      <Row>
+        <Col md="8">
+          <CustomizeSlider sliderChange={this.state.sliderChange}/>
+        </Col>
+      </Row>
+      <Row>
+        <Col md="8">
       <Results array={this.state.array} />
-
+        </Col>
+      </Row>
+      </Container>
     </div>
   );
 }

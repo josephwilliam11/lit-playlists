@@ -3,30 +3,31 @@ import ReactDOM from 'react-dom';
 import Slider, { Range, createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
  
-
 function log(value) {
     console.log(value);
 }
-
-const SliderWithTooptip = createSliderWithTooltip(Slider);
-
+const SliderWithTooltip = createSliderWithTooltip(Slider);
 class CustomizeSlider extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+    // constructor(props) {
+    //     super(props);
+        state = {
             value: 1,
             min: 0.25,
             max: 1,
         };
-    }
+    // }
     onSliderChange = (value) => {
         log(value);
         this.setState({
-            value,
+            value
         })
+        
+       
+       
     }
     onAfterChange = (value) => {
         console.log(value);
+        this.props.sliderChange(value);
     }
   
     render() {
@@ -35,13 +36,11 @@ class CustomizeSlider extends React.Component {
                     defaultValue={1} 
                     value={this.state.value}
                     onChange={this.onSliderChange}
-                    onAfterChange={this.onAfterChange}
+                    onAfterChange={(event) => this.onAfterChange(event.target.value)}
                     min={this.state.min} 
                     max={this.state.max}
             />         
         );   
     }
 }
-
-
 export default CustomizeSlider;
