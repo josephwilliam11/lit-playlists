@@ -58,7 +58,7 @@ class Search extends Component {
   }
 
   playTrack = () => {
-    spotifyApi.getMe()
+    spotifyApi.createPlaylist(this.state.array)
       .then((response) => {
         console.log(response);
 
@@ -67,22 +67,26 @@ class Search extends Component {
 
 
   getsearch = (searchTerm) => {
-    //search by artist 50 tracks
-    var prev = null;
-    // abort previous request, if any
-    if (prev !== null) {
-      prev.abort();
+    function handleClick(e) {
+      e.preventDefault()
     }
+    //search by artist 50 tracks
+    // var prev = null;
+    // // abort previous request, if any
+    // if (prev !== null) {
+    //   prev.abort();
+    // }
     // store the current promise in case we need to abort it
-    prev = spotifyApi.searchTracks(searchTerm, { limit: 50 });
-    console.log(spotifyApi);
+   spotifyApi.searchTracks(searchTerm, { limit: 50 })
+    
 
-    prev.then((data) => {
+    .then((data) => {
 
       // clean the promise so it doesn't call abort
-      prev = null;
+      // prev = null;
 
       const items = data.tracks.items;
+      console.log(items)
       items.forEach(function (item) {
 
         let ms = item.duration_ms;
@@ -96,7 +100,7 @@ class Search extends Component {
       });
   }
 
-  sliderChange = () => {
+  sliderChange = (val) => {
     console.log("cans")
     this.state.array.forEach((item) => {
       //analysis getting dancebility value           
@@ -109,101 +113,121 @@ class Search extends Component {
           // dance: [...dance, res.danceability]
           analysis: [...analysis, res]
         })
-        const val = this.state.value;
+        // const val = this.state.value;
         const trackAnalysis = this.state.analysis;
         let sorted = '';
+        console.log(val)
         switch (val) {
-          case '1.0':
+          case 1.0:
              sorted = _.sortBy(trackAnalysis, ['danceability', 'DESC'])
             console.log('1.0' , sorted)
             break;
-          case '0.25':
+          case 0.25:
              sorted = _.sortBy(trackAnalysis, ['danceability', 'ASC'])
             console.log('0.25' , sorted)
             break;
-          case '0.50':
+          case 0.50:
               sorted = _.filter(trackAnalysis, function(track) {
               return track.danceability <= val           
             })
             sorted = _.sortBy(sorted, ['danceability', 'ASC'])
             console.log('0.50' , sorted)
             break;
-          case '0.75':
+          case 0.75:
             sorted = _.filter(trackAnalysis, function(track) {
             return track.danceability <= val 
 
           })
-          sorted = _.sortBy(sorted, ['danceability', 'ASC'])
+          sorted = _.sortBy(sorted, ['danceability', 'DESC'])
           console.log('0.75' , sorted)
           break;
         }
-
-        // const val = this.state.value;
-        // const trackAnalysis = this.state.analysis;
-        // const sort = _.filter(trackAnalysis, function(track){
-        //    return track.danceability > val
+        this.setState({sorted})
+        console.log(this.state.sorted);
+        // this.showPlaylist();
       })
 
-
-
-    
-
     })
   
 }
 
-componentDidMount() {
+// showPlaylist() {
+//   this.state.sorted.forEach((item) => {
+//     // console.log(item.id)
+//     spotifyApi.getTrack(item.id)
+//      .then((res) => {
+//       console.log(res)
+//      })
+//   })  
+// }
 
-  spotifyApi.getMe()
-  .then((response) => {
-    console.log(response.display_name);
-    this.setState({
-      username: response.display_name
-    })
-  })
-}
-  
+  componentDidMount() {
+
+    spotifyApi.getMe()
+      .then((response) => {
+        console.log(response.display_name);
+        this.setState({
+          username: response.display_name
+        })
+      })
+  }
 
 
-render() {
-  // console.log("what is it", this.getHashParams(), this.state)
-  return (
-    <div className="App">
-    <Container>
-      <Row>     
-        Welcome: {this.state.username}
-      </Row>
-      <Row>
-        <p>To Create A Lit Playlist First Seach by Artist</p>
-      </Row>
-      {this.state.loggedIn &&
-      <Row>
-        <Col md="6">
-        <div>
-          <button onClick={() => this.playTrack()}>
-            Test
-          </button>
-          <SearchBar
-            getsearch={this.getsearch}
-          />
-        </div>
+  render() {
+    return (
+      <div className="App">
+       <Row>
+            <Col md="12">
+            <p className= "welcome">Welcome! {this.state.username}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col md="3">
+            </Col>
+            <Col md="9">
+        <Container>  
+          <Row>
+            <Col md="8">
+            <p className="desc">To Create A Playlist Seach by Artist</p>
+            </Col>
+          </Row>
+          {this.state.loggedIn &&
+          
+            <Row>
+              <Col md="8">
+                <div>
+                  <SearchBar className="search"
+                    getsearch={this.getsearch}
+                  />
+                </div>
+              </Col>
+      
+            </Row>           
+          }
+          <Row>
+            <Col md="8">
+              {/* <CustomizeSlider sliderChange={this.sliderChange(this.state.value)} /> */}
+              <CustomizeSlider sliderChange={this.sliderChange}/>
+            </Col>
+          </Row>
+          <Row>
+          <Col md="12">
+            {/* <Save /> */}
+            <button> save</button>
+            </Col>
+          </Row>
+          <Row>
+            <Col md="8">
+              <Results className="resultsContainer" array={this.state.array} />
+            </Col>
+          </Row>
+          
+        </Container>
         </Col>
         </Row>
-      }
-      <Row>
-        <Col md="8">
-          <CustomizeSlider sliderChange={this.state.sliderChange}/>
-        </Col>
-      </Row>
-      <Row>
-        <Col md="8">
-      <Results array={this.state.array} />
-        </Col>
-      </Row>
-      </Container>
-    </div>
-  );
-}
+      </div>
+    );
+  }
 }
 
 export default Search;

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { ListGroup, ListGroupItem} from 'reactstrap';
 import ScrollArea from 'react-scrollbar';
+import './Results.css'
 
 const Results = props => (
     <ul className="list-group search-results">
