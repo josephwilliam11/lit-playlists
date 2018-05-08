@@ -1,0 +1,25 @@
+.form-control {
+   float: right;
+   border: 2px solid white;
+   float: right
+}
+input {
+    float: right
+}
+
+.searchBtn {
+    background-color: white;
+    /* padding: 20px; */
+    border: 2px solid white;
+    color: black;
+    /* margin-top: 10px; */
+    /* float: right; */
+    /* margin-bottom: 40px */
+}
+
+.searchBtn1:hover {
+    background-color:white;
+    border: 2px solid white;
+    /* color: black; */
+    
+  }

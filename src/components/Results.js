@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import ScrollArea from 'react-scrollbar';
 import { convertDuration } from './Utils.js';
-
+import './Results.css'
 
 const Results = props => (
   <div>

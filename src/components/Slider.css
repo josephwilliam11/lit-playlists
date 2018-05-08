@@ -1,0 +1,18 @@
+.rc-slider-railStyle {
+    background-color: #00e058;
+}
+
+
+.fas {
+    background-color: orange
+}
+
+.rc-slider {
+    margin-bottom: 40px;
+    margin-top: 40px
+}
+
+.rc-slider-handle {
+     /* background-color:blue;  */
+    /* border: 2px solid black;  */
+}

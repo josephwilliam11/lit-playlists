@@ -59,7 +59,7 @@ class Search extends Component {
   }
 
   playTrack = () => {
-    spotifyApi.getMe()
+    spotifyApi.createPlaylist(this.state.array)
       .then((response) => {
         console.log(response);
 
@@ -68,22 +68,32 @@ class Search extends Component {
 
 
   getsearch = (searchTerm) => {
-    //search by artist 50 tracks
-    var prev = null;
-    // abort previous request, if any
-    if (prev !== null) {
-      prev.abort();
+    function handleClick(e) {
+      e.preventDefault()
     }
+    //search by artist 50 tracks
+    // var prev = null;
+    // // abort previous request, if any
+    // if (prev !== null) {
+    //   prev.abort();
+    // }
     // store the current promise in case we need to abort it
-    prev = spotifyApi.searchTracks(searchTerm, { limit: 50 });
-    console.log(spotifyApi);
+   spotifyApi.searchTracks(searchTerm, { limit: 50 })
+    
 
-    prev.then((data) => {
+    .then((data) => {
 
       // clean the promise so it doesn't call abort
-      prev = null;
+      // prev = null;
 
       const items = data.tracks.items;
+      console.log(items)
+      items.forEach(function (item) {
+
+        let ms = item.duration_ms;
+        let min = Math.floor((ms / 1000 / 60) << 0);
+        let sec = Math.floor((ms / 1000) % 60);
+      })
       this.setState({ array: items })
     },
       function (err) {
@@ -110,8 +120,8 @@ class Search extends Component {
         console.log(val)
         switch (val) {
           case 1.0:
-             sorted = _.sortBy(trackAnalysis, ['danceability', 'DESC'])
-            // console.log('1.0' , sorted)
+             sorted = _.sortBy(trackAnalysis, ['danceability', 'desc'])
+            console.log('1.0' , sorted.reverse())
             break;
           case 0.25:
              sorted = _.sortBy(trackAnalysis, ['danceability', 'ASC'])
@@ -130,84 +140,95 @@ class Search extends Component {
 
           })
           sorted = _.sortBy(sorted, ['danceability', 'DESC'])
-          // console.log('0.75' , sorted)
+          console.log('0.75' , sorted.reverse())
           break;
         }
         this.setState({sorted})
         console.log(this.state.sorted);
-        this.showPlaylist(this.state.sorted);
+        // this.showPlaylist();
       })
 
     })
   
 }
 
-showPlaylist(array) {
- 
-  array.forEach((item) => {
-  
-   const result = spotifyApi.getTrack(item.id);
-   result.then((res) => {
-     
-   })
-   console.log(result)
-  })
-}
+// showPlaylist() {
+//   this.state.sorted.forEach((item) => {
+//     // console.log(item.id)
+//     spotifyApi.getTrack(item.id)
+//      .then((res) => {
+//       console.log(res)
+//      })
+//   })  
+// }
+
+  componentDidMount() {
+
+    spotifyApi.getMe()
+      .then((response) => {
+        console.log(response.display_name);
+        this.setState({
+          username: response.display_name
+        })
+      })
+  }
 
 
-
-componentDidMount() {
-
-  spotifyApi.getMe()
-  .then((response) => {
-    console.log(response.display_name);
-    this.setState({
-      username: response.display_name
-    })
-  })
-}
-  
-
-
-render() {
-  // console.log("what is it", this.getHashParams(), this.state)
-  return (
-    <div className="App">
-    <Container>
-      <Row>     
-        Welcome: {this.state.username}
-      </Row>
-      <Row>
-        <p>To Create A Lit Playlist First Seach by Artist</p>
-      </Row>
-      {this.state.loggedIn &&
-      <Row>
-        <Col md="6">
-        <div>
-          <button onClick={() => this.playTrack()}>
-            Test
-          </button>
-          <SearchBar
-            getsearch={this.getsearch}
-          />
-        </div>
+  render() {
+    return (
+      <div className="App">
+       <Row>
+            <Col md="12">
+            <p className= "welcome">Welcome! {this.state.username}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col md="3">
+            </Col>
+            <Col md="9">
+        <Container>  
+          <Row>
+            <Col md="8">
+            <p className="desc">To Create A Playlist Seach by Artist</p>
+            </Col>
+          </Row>
+          {this.state.loggedIn &&
+          
+            <Row>
+              <Col md="8">
+                <div>
+                  <SearchBar className="search"
+                    getsearch={this.getsearch}
+                  />
+                </div>
+              </Col>
+      
+            </Row>           
+          }
+          <Row>
+            <Col md="8">
+              {/* <CustomizeSlider sliderChange={this.sliderChange(this.state.value)} /> */}
+              <CustomizeSlider sliderChange={this.sliderChange}/>
+            </Col>
+          </Row>
+          <Row>
+          <Col md="12">
+            {/* <Save /> */}
+            <button> save</button>
+            </Col>
+          </Row>
+          <Row>
+            <Col md="8">
+              <Results className="resultsContainer" array={this.state.array} />
+            </Col>
+          </Row>
+          
+        </Container>
         </Col>
         </Row>
-      }
-      <Row>
-        <Col md="8">
-          <CustomizeSlider sliderChange={this.sliderChange}/>
-        </Col>
-      </Row>
-      <Row>
-        <Col md="8">
-      <Results array={this.state.array} />
-        </Col>
-      </Row>
-      </Container>
-    </div>
-  );
-}
+      </div>
+    );
+  }
 }
 
 export default Search;

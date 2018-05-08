@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, Input,Button } from 'reactstrap';
+import { Form, FormGroup, Input, Button, Col, Container, Row} from 'reactstrap';
+import './SearchBar.css';
 
 
 class SearchBar extends Component {
@@ -21,18 +22,24 @@ class SearchBar extends Component {
     }
  
     render() {
-        return (    
+        return (  
+
           <Form>
+              <Row>
+                  <Col md="8">
               <FormGroup>
                   <Input 
                     type="text"
-                    placeholder="Type in search term"
+                    placeholder="Artist Name"
                     value={this.state.searchString}
                     onChange={(event) => this.handleInputChange(event.target.value)}
                   />
-                  <button type="submit" onClick={this.getresults}></button>
-        
-              </FormGroup>    
+              </FormGroup> 
+              </Col>
+              <Col md ="4">
+                 <Button className="searchBtn searchBtn1" type="submit" onClick={this.getresults}>Search</Button>
+               </Col> 
+                </Row>
           </Form>    
         ) 
     }

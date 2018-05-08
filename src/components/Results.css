@@ -1,0 +1,16 @@
+img {
+    margin-right: 70px;
+    
+}
+
+p {
+    font-size: 20px
+}
+
+.list-group {
+    height:500px;
+    width:100%;
+    font:16px/26px Georgia, Garamond, Serif;
+    overflow:auto;
+    border: 1px
+}
