@@ -6,6 +6,9 @@ import 'rc-slider/assets/index.css';
 function log(value) {
     console.log(value);
 }
+function percentFormatter(v) {
+    return `${v}`;
+   }
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 class CustomizeSlider extends React.Component {
     // constructor(props) {
@@ -16,6 +19,7 @@ class CustomizeSlider extends React.Component {
             max: 1,
         };
     // }
+    
     onSliderChange = (value) => {
         log(value);
         this.setState({
@@ -32,13 +36,15 @@ class CustomizeSlider extends React.Component {
   
     render() {
         return (
-            <Slider step={0.25} 
+            <SliderWithTooltip step={0.25} 
                     defaultValue={1} 
                     value={this.state.value}
                     onChange={this.onSliderChange}
                     onAfterChange={this.onAfterChange}
                     min={this.state.min} 
                     max={this.state.max}
+                    tipFormatter={percentFormatter}
+                    tipProps={{ overlayClassName: 'foo' }}
             />         
         );   
     }

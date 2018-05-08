@@ -111,18 +111,18 @@ class Search extends Component {
         switch (val) {
           case 1.0:
              sorted = _.sortBy(trackAnalysis, ['danceability', 'DESC'])
-            console.log('1.0' , sorted)
+            // console.log('1.0' , sorted)
             break;
           case 0.25:
              sorted = _.sortBy(trackAnalysis, ['danceability', 'ASC'])
-            console.log('0.25' , sorted)
+            // console.log('0.25' , sorted)
             break;
           case 0.50:
               sorted = _.filter(trackAnalysis, function(track) {
               return track.danceability <= val           
             })
             sorted = _.sortBy(sorted, ['danceability', 'ASC'])
-            console.log('0.50' , sorted)
+            // console.log('0.50' , sorted)
             break;
           case 0.75:
             sorted = _.filter(trackAnalysis, function(track) {
@@ -130,27 +130,31 @@ class Search extends Component {
 
           })
           sorted = _.sortBy(sorted, ['danceability', 'DESC'])
-          console.log('0.75' , sorted)
+          // console.log('0.75' , sorted)
           break;
         }
         this.setState({sorted})
         console.log(this.state.sorted);
-        this.showPlaylist();
+        this.showPlaylist(this.state.sorted);
       })
 
     })
   
 }
 
-showPlaylist() {
-  this.state.sorted.forEach((item) => {
-    // console.log(item.id)
-    spotifyApi.getTrack(item.id)
-     .then((res) => {
-      console.log(res)
-     })
-  })  
+showPlaylist(array) {
+ 
+  array.forEach((item) => {
+  
+   const result = spotifyApi.getTrack(item.id);
+   result.then((res) => {
+     
+   })
+   console.log(result)
+  })
 }
+
+
 
 componentDidMount() {
 
