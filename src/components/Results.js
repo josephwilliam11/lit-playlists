@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { ListGroup, ListGroupItem} from 'reactstrap';
 import ScrollArea from 'react-scrollbar';
+import { convertDuration } from './Utils.js';
 import './Results.css'
 
 const Results = props => (
     <ul className="list-group search-results">
       {props.array.map(track => (
         <li key={track.id} className="list-group-item">
-          <p><img src={track.album.images[2].url} />{track.name}  {track.duration_ms}</p>
+          <p><img src={track.album.images[2].url} />{track.name}  {convertDuration(track.duration_ms)}</p>
         </li>
       ))}
     </ul>

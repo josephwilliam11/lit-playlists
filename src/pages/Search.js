@@ -119,8 +119,8 @@ class Search extends Component {
         console.log(val)
         switch (val) {
           case 1.0:
-             sorted = _.sortBy(trackAnalysis, ['danceability', 'DESC'])
-            console.log('1.0' , sorted)
+             sorted = _.sortBy(trackAnalysis, ['danceability', 'desc'])
+            console.log('1.0' , sorted.reverse())
             break;
           case 0.25:
              sorted = _.sortBy(trackAnalysis, ['danceability', 'ASC'])
@@ -139,7 +139,7 @@ class Search extends Component {
 
           })
           sorted = _.sortBy(sorted, ['danceability', 'DESC'])
-          console.log('0.75' , sorted)
+          console.log('0.75' , sorted.reverse())
           break;
         }
         this.setState({sorted})
