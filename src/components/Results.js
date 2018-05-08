@@ -8,8 +8,8 @@ import './Results.css'
 const Results = props => (
   <div>
     <ul className="list-group search-results">
-      {props.array.map(track => (
-        <li key={track.id} className="list-group-item">
+      {props.array.map((track, i) => (
+        <li key={track.id + i} className="list-group-item">
           <p><img src={track.album.images[2].url} />{track.name}  {convertDuration(track.duration_ms)}</p>
         </li>
       ))}

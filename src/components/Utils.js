@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 44c77df2a5fd9f8957484fdf22f29bd10ab36f9f
 const convertDuration = (val) => {
     let ms = val;
     let min = Math.floor((ms / 1000 / 60) << 0);
