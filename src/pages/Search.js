@@ -7,6 +7,7 @@ import ScrollArea from 'react-scrollbar';
 import CustomizeSlider from '../components/Slider';
 import { Container, Row, Col } from 'reactstrap';
 import './Style.css';
+import axios from 'axios';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -28,7 +29,8 @@ class Search extends Component {
       value: 0,
       username: '',
       sorted: [],
-      items: []
+      items: [],
+      filteredArray: []
     }
   }
 
@@ -68,17 +70,14 @@ class Search extends Component {
   }
 
 
+
   getsearch = (searchTerm) => {
     function handleClick(e) {
       e.preventDefault()
-    }
-    //search by artist 50 tracks
-    // var prev = null;
-    // // abort previous request, if any
-    // if (prev !== null) {
-    //   prev.abort();
-    // }
-    // store the current promise in case we need to abort it
+    } 
+  
+  this.saveSearchterm(searchTerm);
+    
    spotifyApi.searchTracks(searchTerm, { limit: 50 })
     
 
@@ -109,56 +108,8 @@ class Search extends Component {
 
   sliderChange = (val) => {
     this.setState({value: val});
-    // this.state.array.forEach((item) => {
-    //   //analysis getting dancebility value           
-    //   const analysis = spotifyApi.getAudioFeaturesForTrack(item.id)
-    //   analysis.then((res) => {
-    //     // console.log(this.state.analysis)
-    //     const { analysis } = this.state;
-
-    //     this.setState({
-    //       // dance: [...dance, res.danceability]
-    //       analysis: [...analysis, res]
-    //     })
-    //     // const val = this.state.value;
-    //     const trackAnalysis = this.state.analysis;
-    //     let sorted = '';
-
-    //     // const NewArray = array.filter(item => item >= val);
-    //     // _.sortBy(NewArray, ['danceability', this.state.sort])
-    //     console.log(val)
-    //     switch (val) {
-    //       case 1.0:
-    //          sorted = _.sortBy(trackAnalysis, ['danceability', 'desc'])
-    //         console.log('1.0' , sorted.reverse())
-    //         break;
-    //       case 0.25:
-    //          sorted = _.sortBy(trackAnalysis, ['danceability', 'ASC'])
-    //         // console.log('0.25' , sorted)
-    //         break;
-    //       case 0.50:
-    //           sorted = _.filter(trackAnalysis, function(track) {
-    //           return track.danceability <= val           
-    //         })
-    //         sorted = _.sortBy(sorted, ['danceability', 'ASC'])
-    //         // console.log('0.50' , sorted)
-    //         break;
-    //       case 0.75:
-    //         sorted = _.filter(trackAnalysis, function(track) {
-    //         return track.danceability <= val 
-
-    //       })
-    //       sorted = _.sortBy(sorted, ['danceability', 'DESC'])
-    //       console.log('0.75' , sorted.reverse())
-    //       break;
-    //     }
-    //     this.setState({sorted})
-    //     console.log(this.state.sorted);
-    //     // this.showPlaylist();
-    //   })
-
-    // })
-  
+    const filteredArray = this.state.items.filter(item => item.danceability >= this.state.value);
+    this.setState({filteredArray: filteredArray});
 }
 
 showPlaylist() {
@@ -176,15 +127,35 @@ showPlaylist() {
     spotifyApi.getMe()
       .then((response) => {
         console.log(response.display_name);
+        console.log("RESPONS" ,response);
         this.setState({
-          username: response.display_name
+          username: response.email
         })
+      this.getUserInfo(response.email)
       })
-  }
+    }
 
+    getUserInfo = (user) => {
+      console.log(user)
+
+      axios.post(`/login/search`, { user })
+      .then(res => {
+        console.log(res);
+      })
+    
+    }
+
+    saveSearchterm = (term) => {
+      axios.post(`/login/searchterm`, { term })
+      .then(res => {
+        console.log(res);
+      })
+    } 
 
   render() {
-    const filteredArray = this.state.items.filter(item => item.danceability >= this.state.value);
+ 
+
+    // const filteredArray = this.state.items.filter(item => item.danceability >= this.state.value);
     return (
       <div className="App">
        <Row>
@@ -229,7 +200,7 @@ showPlaylist() {
           </Row>
           <Row>
             <Col md="8">
-              <Results className="resultsContainer" array={filteredArray} />
+              <Results className="resultsContainer" array={this.state.filteredArray} />
               {/* <Results className="resultsContainer" array={this.state.array} /> */}
             </Col>
           </Row>

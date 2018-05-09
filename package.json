@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:8888/",
   "dependencies": {
+    "axios": "^0.18.0",
     "lodash": "^4.17.10",
     "query-string": "^5.0.0",
     "rc-slider": "^8.6.1",
