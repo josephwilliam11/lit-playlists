@@ -20,6 +20,11 @@ class SearchBar extends Component {
         let str = this.state.searchString;
         this.props.getsearch(str);
     }
+
+    reload(){
+        document.location.reload(true)
+        console.log('joe')
+    }
  
     render() {
         return (  
@@ -36,8 +41,11 @@ class SearchBar extends Component {
                   />
               </FormGroup> 
               </Col>
-              <Col md ="4">
+              <Col md ="2">
                  <Button className="searchBtn searchBtn1" type="submit" onClick={this.getresults}>Search</Button>
+               </Col> 
+               <Col md ="2">
+                 <Button className="searchBtn searchBtn1"  onClick={this.reload}>Clear</Button>
                </Col> 
                 </Row>
           </Form>    

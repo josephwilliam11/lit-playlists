@@ -1,11 +1,9 @@
 .form-control {
-   float: right;
+   /* float: right; */
    border: 2px solid white;
-   float: right
+   /* float: right */
 }
-input {
-    float: right
-}
+
 
 .searchBtn {
     background-color: white;

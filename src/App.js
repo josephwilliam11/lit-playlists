@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import 'reset-css/reset.css';
 import './App.css';
-import SearchBar from './components/SearchBar';
+import { footer } from 'reactstrap';
 import queryString from 'query-string';
 import Search from './pages/Search';
 import Text from './components/Text';
+import { Link } from 'react-router-dom';
 
 class App extends Component {
 
@@ -14,9 +15,12 @@ class App extends Component {
     // filterString: '',
     // songs: []
   }
+  gitcansu() {
+    window.open("https://github.com/cansu2", '_blank');
+  }
 
-  onUserInput(searchTerm) {
-
+  gitjoes() {
+    window.open("https://github.com/josephwilliam11", '_blank');
   }
 
   componentDidMount() {
@@ -36,7 +40,7 @@ class App extends Component {
   render() {
 
     return (
-      
+
       <div className="App">
         {this.state.user ?
           <div>
@@ -55,10 +59,15 @@ class App extends Component {
 
               </button>
             </center>
+            <br></br>
+
           </div>
 
         }
-
+        <center>
+              <i className="fab fa-github-alt fa-3x git" onClick={this.gitcansu}></i>
+              <i className="fab fa-github-alt fa-3x git"onClick={this.gitjoes}></i>
+        </center>
       </div>
     )
   }
