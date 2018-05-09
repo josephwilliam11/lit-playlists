@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
 import _ from 'lodash';
+import ReactPlayer from 'react-player'
 import SearchBar from '../components/SearchBar';
 import Results from '../components/Results';
 import ScrollArea from 'react-scrollbar';
 import CustomizeSlider from '../components/Slider';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, Button } from 'reactstrap';
 import './Style.css';
 import axios from 'axios';
 
@@ -30,7 +31,8 @@ class Search extends Component {
       username: '',
       sorted: [],
       items: [],
-      filteredArray: []
+      filteredArray: [],
+      userId: ''
     }
   }
 
@@ -87,6 +89,7 @@ class Search extends Component {
       // prev = null;
 
       const items = data.tracks.items;
+
       items.forEach(item => {
         spotifyApi.getAudioFeaturesForTrack(item.id).then(res => {
           item.danceability = res.danceability;
@@ -95,7 +98,9 @@ class Search extends Component {
           items: [...items, item]
         })
         });
-
+        this.setState(
+          {filteredArray: items}
+        )
       });
 
 
@@ -108,18 +113,40 @@ class Search extends Component {
 
   sliderChange = (val) => {
     this.setState({value: val});
-    const filteredArray = this.state.items.filter(item => item.danceability >= this.state.value);
-    this.setState({filteredArray: filteredArray});
+    const filteredArray = this.state.items.filter(item => item.danceability <= val);
+    this.setState(
+      {filteredArray: filteredArray}
+    )  
+    console.log(this.state.filteredArray)
 }
 
-showPlaylist() {
-  this.state.sorted.forEach((item) => {
-    // console.log(item.id)
-    spotifyApi.getTrack(item.id)
-     .then((res) => {
-      console.log(res)
-     })
-  })  
+savePlaylist = () => {
+  console.log('joe')
+  console.log(this.state.userId)
+  const id = this.state.userId;
+  console.log(spotifyApi)
+  const playlistTracks = this.state.filteredArray;
+  const playlistName = "My Playlist "+ new Date();
+  spotifyApi.createPlaylist(id, {name: playlistName}, (err,res)=> {
+    console.log(res, err) 
+    if(err) return;
+    if( res && !!res.id ){
+      console.log("playlist created now adding tracks")
+      const uris = playlistTracks.map((track,index)=>{
+        return track.uri
+      } )
+      //uris = uris.join(',');
+      console.log(res.id, uris)
+      spotifyApi.addTracksToPlaylist(this.state.userId,res.id, uris, (err,res)=> {
+        console.log(res, err) 
+        if(err) return;
+        if(res){
+          console.log('created snapshot and all tracks are in the playlist')
+          alert('Playlist added to Spotify!')
+        }
+      })
+    }
+})
 }
 
   componentDidMount() {
@@ -127,35 +154,15 @@ showPlaylist() {
     spotifyApi.getMe()
       .then((response) => {
         console.log(response.display_name);
-        console.log("RESPONS" ,response);
+        console.log(response)
         this.setState({
-          username: response.email
+          username: response.display_name,
+          userId: response.id
         })
-      this.getUserInfo(response.email)
-      })
-    }
-
-    getUserInfo = (user) => {
-      console.log(user)
-
-      axios.post(`/login/search`, { user })
-      .then(res => {
-        console.log(res);
-      })
-    
-    }
-
-    saveSearchterm = (term) => {
-      axios.post(`/login/searchterm`, { term })
-      .then(res => {
-        console.log(res);
-      })
-    } 
+      })   
+  }
 
   render() {
- 
-
-    // const filteredArray = this.state.items.filter(item => item.danceability >= this.state.value);
     return (
       <div className="App">
        <Row>
@@ -170,32 +177,48 @@ showPlaylist() {
         <Container>  
           <Row>
             <Col md="8">
-            <p className="desc">To Create A Playlist Seach by Artist</p>
+          
             </Col>
           </Row>
           {this.state.loggedIn &&
           
             <Row>
               <Col md="8">
-                <div>
+            
                   <SearchBar className="search"
                     getsearch={this.getsearch}
                   />
-                </div>
+                  
+              
               </Col>
+              <Col md="8">
+            <p className="desc">Adjust Playlist Based on Tempo, Rythm, Beat, and Regularity</p>
+            </Col>
       
-            </Row>           
+            </Row>  
+                     
           }
           <Row>
             <Col md="8">
               {/* <CustomizeSlider sliderChange={this.sliderChange(this.state.value)} /> */}
               <CustomizeSlider sliderChange={this.sliderChange}/>
+              <Row>
+                <Col md='10'>
+              <span><i className="fas fa-fire fa-1x fire"></i></span>
+              </Col>
+              <Col md="2">
+              <span><i className="fas fa-fire fa-1x fire fire1"></i></span>
+        
+              <span><i className="fas fa-fire fa-1x fire fire1"></i></span>
+              </Col>
+              </Row>
             </Col>
           </Row>
           <Row>
-          <Col md="12">
+          <Col md="8">
             {/* <Save /> */}
-            <button> save</button>
+            <Button className="savebtn savebtn1" onClick={this.savePlaylist}>Save to Spotify</Button>
+
             </Col>
           </Row>
           <Row>

@@ -4,7 +4,8 @@ img {
 }
 
 p {
-    font-size: 20px
+    font-size: 20px;
+    margin-right: 20px
 }
 
 .list-group {
@@ -12,5 +13,6 @@ p {
     width:100%;
     font:16px/26px Georgia, Garamond, Serif;
     overflow:auto;
-    border: 1px
+    border: 1px;
+    margin-top: 20px
 }

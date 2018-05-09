@@ -18,7 +18,7 @@ class CustomizeSlider extends React.Component {
   //     super(props);
       state = {
           value: 1,
-          min: 0.25,
+          min: 0,
           max: 1,
       };
   // }
