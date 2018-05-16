@@ -23,7 +23,6 @@ class SearchBar extends Component {
 
     reload(){
         document.location.reload(true)
-        console.log('joe')
     }
  
     render() {

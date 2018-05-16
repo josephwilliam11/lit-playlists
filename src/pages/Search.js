@@ -5,10 +5,10 @@ import ReactPlayer from 'react-player'
 import SearchBar from '../components/SearchBar';
 import Results from '../components/Results';
 import ScrollArea from 'react-scrollbar';
+import Feature from '../components/Feature';
 import CustomizeSlider from '../components/Slider';
 import { Container, Row, Col, Button } from 'reactstrap';
 import './Style.css';
-import axios from 'axios';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -32,7 +32,8 @@ class Search extends Component {
       sorted: [],
       items: [],
       filteredArray: [],
-      userId: ''
+      userId: '',
+      feature: "danceability"
     }
   }
 
@@ -71,28 +72,35 @@ class Search extends Component {
       })
   }
 
+  getselect = (str) => {
+    this.setState({feature: str});
+    console.log('what you select', str);
+  }
 
 
   getsearch = (searchTerm) => {
     function handleClick(e) {
       e.preventDefault()
-    } 
-  
-  this.saveSearchterm(searchTerm);
-    
+    }
+
+     
+    // store the current promise in case we need to abort it
    spotifyApi.searchTracks(searchTerm, { limit: 50 })
     
 
     .then((data) => {
 
-      // clean the promise so it doesn't call abort
-      // prev = null;
-
       const items = data.tracks.items;
 
+     
+
+
       items.forEach(item => {
+       
+
         spotifyApi.getAudioFeaturesForTrack(item.id).then(res => {
           item.danceability = res.danceability;
+    
           const { items } = this.state;
         this.setState({
           items: [...items, item]
@@ -113,7 +121,11 @@ class Search extends Component {
 
   sliderChange = (val) => {
     this.setState({value: val});
+    // let feature = this.state.feature;
+    // console.log(feature)
     const filteredArray = this.state.items.filter(item => item.danceability <= val);
+    // const filteredArray = this.state.items.filter(item => item.feature <= val);
+
     this.setState(
       {filteredArray: filteredArray}
     )  
@@ -156,7 +168,7 @@ savePlaylist = () => {
         console.log(response.display_name);
         console.log(response)
         this.setState({
-          username: response.display_name,
+          username: response.id || response.display_name,
           userId: response.id
         })
       })   
@@ -192,12 +204,17 @@ savePlaylist = () => {
               
               </Col>
               <Col md="8">
-            <p className="desc">Adjust Playlist Based on Tempo, Rythm, Beat, and Regularity</p>
+            <p className="desc">Adjust Playlist Based on Tempo, Rhythm, Energy, and Instrumentalness</p>
             </Col>
-      
             </Row>  
                      
           }
+          <Row>
+          <Col sm="3"></Col>
+          <Col sm="6">
+            <Feature getselect={this.getselect}/>
+            </Col>
+            </Row>
           <Row>
             <Col md="8">
               {/* <CustomizeSlider sliderChange={this.sliderChange(this.state.value)} /> */}

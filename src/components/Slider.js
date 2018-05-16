@@ -39,7 +39,7 @@ class CustomizeSlider extends React.Component {
 
   render() {
       return (
-          <SliderWithTooltip step={0.25} 
+          <SliderWithTooltip step={0.10} 
                   defaultValue={1} 
                   value={this.state.value}
                   onChange={this.onSliderChange}
